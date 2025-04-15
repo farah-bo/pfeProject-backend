@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@CrossOrigin
+@CrossOrigin(origins = "*", maxAge = 3000)
 @RequestMapping("/api/user")
 public class UserController {
     @Autowired
@@ -26,7 +26,6 @@ public class UserController {
 
 
     @GetMapping("/list-user")
-    @PreAuthorize("hasRole('ADMIN')")
     public List<User> ListUser() {
         return userServiceIMP.getAllUser();
     }

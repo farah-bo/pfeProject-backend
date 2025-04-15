@@ -86,7 +86,7 @@ public class AuthRestAPIs {
 
         List<String> jwt = jwtProvider.generateJwtTokens(authentication);
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        return ResponseEntity.ok(new JwtResponse(jwt.get(0), jwt.get(1), userDetails.getUsername(), foundUser.getId(), userDetails.getAuthorities()));
+        return ResponseEntity.ok(new JwtResponse(jwt.get(0), jwt.get(1), userDetails.getUsername(), foundUser.getId(), userDetails.getAuthorities(),user.get().getRole()));
     }
 
     @PostMapping("/refreshToken")

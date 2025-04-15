@@ -1,4 +1,5 @@
 package com.example.segulaproject.JWT;
+import com.example.segulaproject.Entities.Enum.RoleUser;
 import org.springframework.security.core.GrantedAuthority;
 
 import lombok.AllArgsConstructor;
@@ -16,6 +17,8 @@ public class JwtResponse {
     private String token;
     private String type = "access";
     private String username;
+    private RoleUser roleUser;
+
     private Collection<? extends GrantedAuthority> authorities;
     private String refreshToken;
 
@@ -43,6 +46,14 @@ public class JwtResponse {
         this.username = username;
         this.id = iduser;
         this.authorities = authorities;
+    }
+    public JwtResponse(String s, String s1, String username, Long iduser, Collection<? extends GrantedAuthority> authorities, RoleUser roleUser) {
+        this.token = s;
+        this.refreshToken = s1;
+        this.username = username;
+        this.id = iduser;
+        this.authorities = authorities;
+        this.roleUser = roleUser;
     }
 
 

@@ -37,6 +37,9 @@ public class SecurityConfig {
               .authorizeHttpRequests(auth -> auth
                       .requestMatchers(HttpMethod.POST, "/api/auth/signIn").permitAll()
                       .requestMatchers(HttpMethod.POST, "/api/auth/signup/**").permitAll()
+                      .requestMatchers(HttpMethod.GET, "/api/user/list-user").permitAll()
+                      .requestMatchers(HttpMethod.DELETE, "/api/user/delete-user/**").permitAll()
+
                       .requestMatchers(HttpMethod.POST, "/api/auth//signupadmin").permitAll()
                       .requestMatchers(HttpMethod.POST, "/api/auth//signupPatient").permitAll()
 
