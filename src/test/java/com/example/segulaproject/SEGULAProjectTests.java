@@ -9,5 +9,8 @@ class SEGULAProjectTests {
     @Test
     void contextLoads() {
     }
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/main
 }

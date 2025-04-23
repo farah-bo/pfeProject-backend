@@ -7,9 +7,17 @@ import com.example.segulaproject.Entities.Enum.RoleUser;
 import com.example.segulaproject.Entities.Role;
 import com.example.segulaproject.Entities.User;
 import com.example.segulaproject.Repositories.RoleRepository;
+<<<<<<< HEAD
 import com.example.segulaproject.Repositories.UserRepository;
 import com.example.segulaproject.Services.OTPInterface;
 import com.example.segulaproject.Services.UserServiceInterface;
+=======
+import com.example.segulaproject.Repositories.SpecialtyRepository;
+import com.example.segulaproject.Repositories.UserRepository;
+import com.example.segulaproject.Services.OTPInterface;
+import com.example.segulaproject.Services.UserServiceInterface;
+import jakarta.persistence.EntityNotFoundException;
+>>>>>>> origin/main
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,6 +27,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
+<<<<<<< HEAD
+=======
+import com.example.segulaproject.Entities.Specialty;
+>>>>>>> origin/main
 
 import java.util.*;
 
@@ -56,9 +68,16 @@ public class UserServiceIMP implements UserServiceInterface {
     public User deleteUser(Long id) {
         Optional<User> user = userRepository.findById(id);
         if (user.isPresent()) {
+<<<<<<< HEAD
             return user.get();
         } else {
             return null;
+=======
+            userRepository.delete(user.get());
+            return user.get(); // On retourne l'utilisateur supprimé
+        } else {
+            throw new EntityNotFoundException("Utilisateur non trouvé avec l'ID : " + id);
+>>>>>>> origin/main
         }
     }
 
@@ -193,7 +212,20 @@ public class UserServiceIMP implements UserServiceInterface {
         if (userRepository.existsByEmail(user1.getEmail())) {
             return new ResponseEntity<User>(HttpStatus.BAD_REQUEST);
         }
+<<<<<<< HEAD
         User user = new User(user1.getName(), user1.getUsername(), user1.getEmail(), passwordEncoder.encode(user1.getPassword()), false, user1.getAddress(), false);
+=======
+        User user = new User(
+                user1.getName(),
+                user1.getUsername(),
+                user1.getEmail(),
+                passwordEncoder.encode(user1.getPassword()),
+                false,
+                user1.getAddress(),
+                false
+        );
+        user.setImage(user1.getImage()); // 👈 ajouter ceci
+>>>>>>> origin/main
         Set<Role> roles = new HashSet<>();
         Role userRole = roleRepository.findByRoleName(RoleUser.valueOf(roleName.trim()))
                 .orElseThrow(() -> new RuntimeException("Fail! -> Cause: User Role not find."));
@@ -241,6 +273,10 @@ public class UserServiceIMP implements UserServiceInterface {
             return new ResponseEntity<User>(HttpStatus.BAD_REQUEST);
         }
         User user = new User(user1.getName(), user1.getUsername(), user1.getEmail(), passwordEncoder.encode(user1.getPassword()), false, user1.getAddress(), false);
+<<<<<<< HEAD
+=======
+        user.setImage(user1.getImage()); // 👈 aussi ici
+>>>>>>> origin/main
         Set<Role> roles = new HashSet<>();
         user.setRoles(roles);
         user.setValid(true);
@@ -275,6 +311,10 @@ public class UserServiceIMP implements UserServiceInterface {
         }
         String token = UUID.randomUUID().toString().replace("-", "");
         User user1 = new User(user.getName(), user.getUsername(), user.getEmail(), passwordEncoder.encode(user.getPassword()), false, user.getAddress(), true);
+<<<<<<< HEAD
+=======
+        user1.setImage(user.getImage());
+>>>>>>> origin/main
         user.setNumber(user.getNumber());
         Set<Role> roles = new HashSet<>();
         Role userRole = roleRepository.findByRoleName(RoleUser.ADMIN)
@@ -284,6 +324,7 @@ public class UserServiceIMP implements UserServiceInterface {
         userRepository.save(user1);
         return new ResponseEntity<User>(user1, HttpStatus.OK);
     }
+<<<<<<< HEAD
     public ResponseEntity<User> registerMedecin(@Valid @RequestBody User user) {
         if (userRepository.existsByUsername(user.getUsername())) {
             return new ResponseEntity<User>(HttpStatus.NOT_FOUND);
@@ -303,6 +344,55 @@ public class UserServiceIMP implements UserServiceInterface {
     userRepository.save(user1);
         return new ResponseEntity<User>(user1, HttpStatus.OK);
     }
+=======
+    @Autowired SpecialtyRepository specialtyRepository; // Assure-toi que ce champ existe dans ta classe
+
+public ResponseEntity<User> registerMedecin(@Valid @RequestBody User user) { if (userRepository.existsByUsername(user.getUsername())) { return new ResponseEntity<>(HttpStatus.NOT_FOUND); } if (userRepository.existsByEmail(user.getEmail())) { return new ResponseEntity<>(HttpStatus.NOT_FOUND); }
+
+// Générer le token
+String token = UUID.randomUUID().toString().replace("-", "");
+
+// Créer l'utilisateur
+User user1 = new User(
+        user.getName(),
+        user.getUsername(),
+        user.getEmail(),
+        passwordEncoder.encode(user.getPassword()),
+        false,
+        user.getAddress(),
+        true
+);
+user1.setImage(user.getImage());
+user1.setNumber(user.getNumber());
+user1.setRole(RoleUser.MEDECIN);
+
+// Associer les rôles
+Set<Role> roles = new HashSet<>();
+Role userRole = roleRepository.findByRoleName(RoleUser.MEDECIN)
+        .orElseThrow(() -> new RuntimeException("Fail! -> Cause: User Role not found."));
+roles.add(userRole);
+user1.setRoles(roles);
+
+// Gérer la spécialité
+// Vérifier et associer la spécialité s'il s'agit d'un médecin 
+if (user.getSpecialty() != null && user.getSpecialty().getName() != null && !user.getSpecialty().getName().isBlank()) { String specialtyName = user.getSpecialty().getName().trim();
+
+// Chercher la spécialité existante ou la créer si elle n'existe pas
+Specialty specialty = specialtyRepository.findByName(specialtyName)
+        .orElseGet(() -> {
+            Specialty newSpecialty = new Specialty();
+            newSpecialty.setName(specialtyName);
+            return specialtyRepository.save(newSpecialty);
+        });
+
+user1.setSpecialty(specialty);
+}
+
+// Sauvegarder le médecin
+userRepository.save(user1);
+return new ResponseEntity<>(user1, HttpStatus.OK);
+}
+>>>>>>> origin/main
 
     public Optional<User> getCurrentUser() {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
